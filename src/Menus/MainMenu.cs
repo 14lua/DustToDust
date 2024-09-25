@@ -11,14 +11,14 @@ public static class MainMenu
 
         var choice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("What do you want to do?")
-                .PageSize(10)
+                .Title("  What do you want to do?")
                 .HighlightStyle(Style.Plain)
                 .AddChoices("Log In", "About", "Exit"));
 
         switch (choice)
         {
             case "Log In":
+                LogIn();
                 break;
             case "About":
                 About();
@@ -44,6 +44,7 @@ public static class MainMenu
             .Centered();
         AnsiConsole.Write(text);
         Console.ReadKey(true);
+        WelcomeMessage();
     }
 
     private static void Exit()
@@ -56,5 +57,64 @@ public static class MainMenu
         Console.ReadKey(true);
         Console.Clear();
         Environment.Exit(0);
+    }
+
+    private static void LogIn()
+    {
+        Console.Clear();
+        Thread.Sleep(1000);
+        BottomLeftAnimated("15:40:06 UTC\nArriving at Jupiter AO");
+        Hear("*cockpit door knocks repeatedly*");
+        Talk(Prompt(["What?", "No.", "*ignore*"]));
+        Console.ReadKey(true);
+    }
+
+    public static void BottomLeftAnimated(string prompt)
+    {
+        Console.Clear();
+        var windowWidth = Console.WindowWidth;
+        var windowHeight = Console.WindowHeight;
+        Console.SetCursorPosition(0, windowHeight - 5);
+        foreach (var c in prompt)
+        {
+            AnsiConsole.Markup($"[italic bold]{c}[/]");
+            Thread.Sleep(25);
+        }
+        Thread.Sleep(1000);
+        Console.Clear();
+        Console.SetCursorPosition(0, 0);
+    }
+
+    public static void Hear(string dialogue)
+    {
+        Console.Clear();
+        Globals.SetHearCursor();
+        foreach (var c in dialogue)
+        {
+            AnsiConsole.Markup($"[italic]{c}[/]");
+            Thread.Sleep(20);
+        }
+        Thread.Sleep(500);
+    }
+
+    public static void Talk(string dialogue)
+    {
+        Globals.SetTalkCursor();
+        AnsiConsole.Markup(">> ");
+        foreach (var c in dialogue)
+        {
+            AnsiConsole.Markup($"{c}");
+            Thread.Sleep(20);
+        }
+    }
+
+    public static string Prompt(string[] options)
+    {
+        Globals.SetPromptCursor();
+        var choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .HighlightStyle(Style.Plain)
+                .AddChoices(options));
+        return choice;
     }
 }
