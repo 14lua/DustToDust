@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using DustToDust.Chapters;
+using Spectre.Console;
 
 namespace DustToDust.Menus;
 
@@ -6,27 +7,33 @@ public static class MainMenu
 {
     public static void WelcomeMessage()
     {
-        Console.Clear();
-        AnsiConsole.Write(Globals.Title);
-
-        var choice = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("What do you want to do?")
-                .PageSize(10)
-                .HighlightStyle(Style.Plain)
-                .AddChoices("Log In", "About", "Exit"));
-
-        switch (choice)
+        var isLogIn = false;
+        var isRunning = true;
+        do
         {
-            case "Log In":
-                break;
-            case "About":
-                About();
-                break;
-            case "Exit":
-                Exit();
-                break;
-        }
+            Console.Clear();
+            AnsiConsole.Write(Globals.Title);
+            var choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("  What do you want to do?")
+                    .HighlightStyle(Style.Plain)
+                    .AddChoices("Log In", "About", "Exit"));
+            switch (choice)
+            {
+                case "Log In":
+                    isLogIn = true;
+                    isRunning = false;
+                    break;
+                case "About":
+                    About();
+                    break;
+                case "Exit":
+                    isRunning = false;
+                    break;
+            }           
+        } while (isRunning);
+        if (isLogIn) LogInChapter.LogIn();
+        else Exit();
     }
 
     private static void About()
@@ -54,7 +61,5 @@ public static class MainMenu
             Centered(); // TODO: Custom messages based on current story
         AnsiConsole.Write(text);
         Console.ReadKey(true);
-        Console.Clear();
-        Environment.Exit(0);
     }
 }

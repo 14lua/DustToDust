@@ -1,2 +1,2 @@
 ## Dust To Dust
-A Text-Based Space RPG
+A text-based space role-playing game
